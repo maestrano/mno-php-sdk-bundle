@@ -12,13 +12,15 @@ define("MAESTRANO_ROOT", realpath(dirname(__FILE__) . '/../../'));
 
 error_reporting(E_ALL);
 
-require MAESTRANO_ROOT . '/app/init/auth.php';
+require MAESTRANO_ROOT . '/app/init/auth_controllers.php';
 
 // Get Maestrano Service
-$maestrano = MaestranoService::getInstance();
+$maestrano = Maestrano::getInstance();
+
+//var_dump($maestrano->ping());
 
 // Build SAML request and Redirect to IDP
-$authRequest = new OneLogin_Saml_AuthRequest($maestrano->getSettings()->getSamlSettings());
+$authRequest = new Maestrano_Saml_AuthRequest($maestrano->getSettings()->getSamlSettings());
 $url = $authRequest->getRedirectUrl();
 
 // Pass the group_id on 

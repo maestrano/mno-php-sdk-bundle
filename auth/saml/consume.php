@@ -16,7 +16,7 @@ define("MAESTRANO_ROOT", realpath(dirname(__FILE__) . '/../../'));
 
 error_reporting(E_ALL);
 
-require MAESTRANO_ROOT . '/app/init/auth.php';
+require MAESTRANO_ROOT . '/app/init/auth_controllers.php';
 
 // Destroy session completely to avoid garbage (undeclared classes)
 // but keep previous url if defined
@@ -34,7 +34,7 @@ if(isset($previous_url)) {
 }
 
 // Get Maestrano Service
-$maestrano = MaestranoService::getInstance();
+$maestrano = Maestrano::getInstance();
 
 // Options variable
 if (!isset($opts)) {
@@ -42,14 +42,14 @@ if (!isset($opts)) {
 }
 
 // Build SAML response
-$samlResponse = new OneLogin_Saml_Response($maestrano->getSettings()->getSamlSettings(), $_POST['SAMLResponse']);
+$samlResponse = new Maestrano_Saml_Response($maestrano->getSettings()->getSamlSettings(), $_POST['SAMLResponse']);
 
 try {
     if ($samlResponse->isValid()) {
         
         // Get Maestrano User and group
-        $sso_user = new MnoSsoUser($samlResponse, $opts);
-        $sso_group = new MnoSsoGroup($samlResponse, $opts);
+        $sso_user = new Maestrano_Sso_User($samlResponse, $opts);
+        $sso_group = new Maestrano_Sso_Group($samlResponse, $opts);
         
         // Try to match the user with a local one
         $sso_user->matchLocal();
